@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://192.168.0.221:5000/api",
+  baseURL: "https://alumniconnect-backend-ig3r.onrender.com/api",
 });
 
 // Automatically attach token if it exists
