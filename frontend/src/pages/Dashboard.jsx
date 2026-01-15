@@ -47,6 +47,17 @@ export default function Dashboard() {
     fetchPending();
   }, []);
 
+  const toggleInvestorMode = async () => {
+  try {
+    const res = await API.patch("/users/toggle-investor");
+    const updatedUser = { ...user, canInvest: res.data.canInvest };
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    window.location.reload();
+  } catch (err) {
+    alert("Failed to toggle investor mode");
+  }
+  };
+
   // ================================
   // INVEST (INVESTORS ONLY)
   // ================================
@@ -114,6 +125,19 @@ export default function Dashboard() {
       <h2>Dashboard</h2>
       <p><strong>{user.name}</strong> ({user.role})</p>
       <hr />
+
+      {/* STUDENT INVESTOR TOGGLE */}
+      {user.role === "student" && (
+        <div style={{ marginBottom: "20px" }}>
+          <button onClick={toggleInvestorMode}>
+            {user.canInvest ? "Deactivate Investor Mode" : "Activate Investor Mode"}
+          </button>
+
+          <p style={{ marginTop: "5px", fontSize: "14px" }}>
+            Status: <strong>{user.canInvest ? "Investor Mode ON" : "Investor Mode OFF"}</strong>
+          </p>
+        </div>
+      )}
 
       {/* ADMIN SECTION */}
       {user.role === "admin" && (
