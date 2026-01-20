@@ -9,14 +9,6 @@ import adminOnly from "../middleware/adminOnly.js";
 
 const router = express.Router();
 
-// middleware: ensure user is admin
-const adminOnly = (req, res, next) => {
-  if (req.user?.role !== "admin") {
-    return res.status(403).json({ message: "Admins only" });
-  }
-  next();
-};
-
 // GET pending proposals for approval
 router.get("/pending", protect, adminOnly, getPendingProjects);
 
