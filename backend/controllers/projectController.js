@@ -1,5 +1,33 @@
 import Project from "../models/project.js";
 
+export const createProject = async (req, res) => {
+  try {
+    const {
+      title,
+      problem,
+      solution,
+      valuationProposal,
+      equityForSaleProposal,
+    } = req.body;
+
+    const project = await Project.create({
+      title,
+      problem,
+      solution,
+      valuationProposal,
+      equityForSaleProposal,
+      createdBy: req.user._id,
+      status: "pending-approval",
+      fundsRaised: 0
+    });
+
+    res.status(201).json({ message: "Project submitted for approval", project });
+  } catch (err) {
+    console.error("CREATE PROJECT ERROR:", err);
+    res.status(500).json({ message: "Failed to create project" });
+  }
+};
+
 export const getMyProjects = async (req, res) => {
   try {
     const projects = await Project.find({ createdBy: req.user._id }).sort({ createdAt: -1 });
