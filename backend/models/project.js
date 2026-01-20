@@ -19,7 +19,7 @@ const projectSchema = new mongoose.Schema(
     fundsRaised: { type: Number, default: 0 },
 
     // relationships
-    creator: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
