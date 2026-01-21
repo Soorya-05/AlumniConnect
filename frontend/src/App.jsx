@@ -9,7 +9,7 @@ import Completed from "./pages/Completed";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const isLoggedIn = !!user;
+  const isLoggedIn = Boolean(localStorage.getItem("user"));
 
   return (
     <Routes>
@@ -44,13 +44,7 @@ function App() {
       />
       <Route
         path="/create-project"
-        element={
-          isLoggedIn && user.role === "student" ? (
-            <CreateProject />
-          ) : (
-            <Navigate to="/login" />
-          )
-        }
+        element={isLoggedIn ? <CreateProject /> : <Navigate to="/login" />}
       />
 
       <Route path="/portfolio" element={<Portfolio />} />
