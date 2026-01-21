@@ -164,6 +164,7 @@ export const getPortfolio = async (req, res) => {
     res.status(500).json({ message: "Failed to load portfolio" });
   }
 };
+
 export const exitProject = async (req, res) => {
   try {
     const { id } = req.params;
