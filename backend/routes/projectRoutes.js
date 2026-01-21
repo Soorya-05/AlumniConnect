@@ -5,7 +5,6 @@ import {
   getMyProjects,
   getMarketplaceProjects,
   getCompletedProjects,
-  investInProject,
   exitProject
 } from "../controllers/projectController.js";
 import { investInProject } from "../controllers/projectController.js";
