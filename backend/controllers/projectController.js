@@ -141,6 +141,7 @@ export const investInProject = async (req, res) => {
     res.status(500).json({ message: "Failed to invest" });
   }
 };
+
 export const getPortfolio = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -148,22 +149,27 @@ export const getPortfolio = async (req, res) => {
     const projects = await Project.find({
       "investors.investor": userId
     })
-    
-      .populate("createdBy", "name")
-      .populate("investors.investor", "name")
-      .sort({ updatedAt: -1 });
+      .populate("creator", "name")                // IMPORTANT
+      .populate("investors.investor", "name");    // IMPORTANT
 
-    project.investors.forEach(inv => {
-    inv.payout = project.isExited ? inv.amount * project.returnMultiplier : null;
-    inv.roi = project.isExited ? ((inv.payout - inv.amount) / inv.amount) * 100 : null;
+    const safeProjects = projects.map(project => {
+      const myInvestments = project.investors.filter(
+        inv => String(inv.investor?._id) === String(userId)
+      );
+
+      return {
+        ...project.toObject(),
+        investors: myInvestments
+      };
     });
 
-    return res.json(projects);
+    res.json(safeProjects);
   } catch (err) {
-    console.error("GET PORTFOLIO ERROR:", err);
+    console.error("PORTFOLIO ERROR:", err);
     res.status(500).json({ message: "Failed to load portfolio" });
   }
 };
+
 
 export const exitProject = async (req, res) => {
   try {

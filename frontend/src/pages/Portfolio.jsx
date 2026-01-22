@@ -12,7 +12,11 @@ export default function Portfolio() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await API.get("/projects/portfolio");
+        const res = await API.get("/projects/portfolio", {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        });
         setProjects(res.data);
       } catch (err) {
         console.error(err);
