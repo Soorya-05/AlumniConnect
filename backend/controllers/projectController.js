@@ -149,7 +149,7 @@ export const getPortfolio = async (req, res) => {
     const projects = await Project.find({
       "investors.investor": userId
     })
-      .populate("creator", "name")                // IMPORTANT
+      .populate("createdBy", "name")                // IMPORTANT
       .populate("investors.investor", "name");    // IMPORTANT
 
     const safeProjects = projects.map(project => {
