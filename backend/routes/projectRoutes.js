@@ -9,6 +9,7 @@ import {
 } from "../controllers/projectController.js";
 import { investInProject } from "../controllers/projectController.js";
 import { getPortfolio } from "../controllers/projectController.js";
+import adminOnly from "../middleware/adminOnly.js";
 
 const router = express.Router();
 
