@@ -134,6 +134,15 @@ export default function Dashboard() {
         </button>
       )}
 
+      {user.role === "alumni" && (
+        <button
+          style={{ marginBottom: 20 }}
+          onClick={() => navigate("/marketplace")}
+        >
+          Go to Marketplace
+        </button>
+      )}
+
       <hr />
 
       {/* ================================

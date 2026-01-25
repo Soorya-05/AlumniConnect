@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Marketplace() {
   const [projects, setProjects] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -41,6 +43,15 @@ export default function Marketplace() {
   return (
     <div style={{ padding: 30 }}>
       <h2>Marketplace</h2>
+        {(user.role === "alumni" || user.canInvest) && (
+          <button
+            style={{ marginBottom: 20 }}
+            onClick={() => navigate("/portfolio")}
+          >
+            View Portfolio
+          </button>
+        )}
+
 
       {projects.length === 0 && <p>No active fundraising projects</p>}
 
