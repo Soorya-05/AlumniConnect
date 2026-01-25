@@ -139,9 +139,26 @@ export default function Dashboard() {
           style={{ marginBottom: 20 }}
           onClick={() => navigate("/marketplace")}
         >
-          Go to Marketplace
+          Marketplace
         </button>
       )}
+
+      <button
+        style={{ marginBottom: 20 }}
+        onClick={() => {
+          localStorage.removeItem("user");
+          navigate("/");
+        }}
+      >
+        Sign Out
+      </button>
+
+      <button
+        style={{ marginBottom: 20 }}
+        onClick={() => navigate("/switch-user")}
+      >
+        Switch Account
+      </button>
 
       <hr />
 

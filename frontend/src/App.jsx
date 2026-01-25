@@ -1,4 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -6,48 +8,63 @@ import CreateProject from "./pages/CreateProject";
 import Marketplace from "./pages/Marketplace";
 import Portfolio from "./pages/Portfolio";
 import Completed from "./pages/Completed";
+import SwitchUser from "./pages/SwitchUser";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const isLoggedIn = Boolean(localStorage.getItem("user"));
-
   return (
     <Routes>
-      {/* Redirect root */}
+      {/* Public */}
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/switch-user" element={<SwitchUser />} />
+
+      {/* Protected */}
       <Route
-        path="/"
+        path="/dashboard"
         element={
-          isLoggedIn ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
         }
       />
 
-      {/* Auth */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
-      {/* Protected Routes */}
-      <Route
-        path="/dashboard"
-        element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />}
-      />
       <Route
         path="/marketplace"
-        element={isLoggedIn ? <Marketplace /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/portfolio"
-        element={isLoggedIn ? <Portfolio /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/completed"
-        element={isLoggedIn ? <Completed /> : <Navigate to="/login" />}
-      />
-      <Route
-        path="/create-project"
-        element={isLoggedIn ? <CreateProject /> : <Navigate to="/login" />}
+        element={
+          <PrivateRoute>
+            <Marketplace />
+          </PrivateRoute>
+        }
       />
 
-      <Route path="/portfolio" element={<Portfolio />} />
+      <Route
+        path="/portfolio"
+        element={
+          <PrivateRoute>
+            <Portfolio />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/completed"
+        element={
+          <PrivateRoute>
+            <Completed />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/create-project"
+        element={
+          <PrivateRoute>
+            <CreateProject />
+          </PrivateRoute>
+        }
+      />
 
       {/* Fallback */}
       <Route path="*" element={<h2>Page Not Found</h2>} />

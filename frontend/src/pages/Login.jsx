@@ -18,21 +18,66 @@ export default function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const res = await API.post("/auth/login", formData);
+  try {
+    const res = await API.post("/auth/login", formData);
 
-      // Save user + token
-      localStorage.setItem("user", JSON.stringify(res.data));
+    // 🔐 SAFELY extract user no matter backend shape
+    const loggedInUser =
+      res.data.user ??
+      res.data;
 
-      alert("Login successful");
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Login failed");
+    if (!loggedInUser || !loggedInUser.role) {
+      throw new Error("Invalid login response shape");
     }
-  };
+
+    // Save session (token may be inside or outside)
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        ...loggedInUser,
+        token: res.data.token || loggedInUser.token
+      })
+    );
+
+    // ---- MULTI ACCOUNT STORAGE (SAFE) ----
+    const raw = localStorage.getItem("knownUsers");
+    const existingUsers = raw ? JSON.parse(raw) : [];
+
+    // Use EMAIL if present, otherwise fallback to _id
+    const uniqueKey = loggedInUser.email || loggedInUser._id;
+
+    const alreadyExists = existingUsers.some(
+      u => u.email === uniqueKey || u._id === uniqueKey
+    );
+
+    if (!alreadyExists) {
+      existingUsers.push({
+        name: loggedInUser.name,
+        email: loggedInUser.email, // may be undefined, OK
+        role: loggedInUser.role,
+        _id: loggedInUser._id
+      });
+    }
+
+    localStorage.setItem(
+      "knownUsers",
+      JSON.stringify(existingUsers)
+    );
+    // -------------------------------------
+
+    navigate("/dashboard");
+  } catch (err) {
+    console.error("LOGIN ERROR:", err);
+    alert("Login failed");
+  }
+};
+
+
+
+
+
 
   return (
     <div style={{ padding: "40px" }}>
